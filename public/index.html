@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Registrar</title>
+    <style>
+        :root {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        input[type='text'] {
+            margin-bottom: 5px;
+            width: 200px;
+        }
+    </style>
+</head>
+
+<body>
+    <a href="login.html">¿Tienes una cuenta?</a>
+    <h1>Registrar</h1>
+    <input type="text" placeholder="Email" id="email">
+    <br />
+    <input type="password" placeholder="Contra" id="contra">
+    <br />
+    <button type="submit" id="boton">Registrar</button>
+    <script>
+        const boton = document.getElementById('boton');
+        const contra = document.getElementById('contra');
+        const email = document.getElementById('email');
+        const sujeto = document.getElementById('sujeto');
+
+        boton.addEventListener('click', e => {
+            if (!contra.value || !email.value) {
+                alert('Llena los dos espacios')
+            }
+            else {
+                let info = {
+                    email: email.value,
+                    password: contra.value,
+                }
+
+                fetch('http://localhost:3000/user/registrar', {
+                    method: 'POST',
+                    body: JSON.stringify(info),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                }).then(res => res.json()).then(res => {
+
+                    if(res.message){
+                        window.location.href = 'login.html'
+                    }
+                    else{
+                        alert('Email ya en uso')
+                    }
+                }).catch(err => console.log(err))
+            }
+        })
+    </script>
+</body>
+
+</html>

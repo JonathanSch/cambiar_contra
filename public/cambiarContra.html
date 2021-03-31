@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cambiar Contraseña</title>
+    <style>
+        :root{
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        main{
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <h1>Cambia tu contraseña</h1>
+        <input type="text" placeholder="Tu email" id="email">
+        <button type="submit" id="submit">Mandar</button>
+        <br />
+        <a href="login.html">Login</a>
+    </main>
+    <script>
+        const email = document.getElementById('email');
+        const boton = document.getElementById('submit');
+
+        boton.addEventListener('click',e=>{
+            e.preventDefault()
+            if(!email.value){
+            alert('Rellena el espacio')
+        }
+        else{
+            fetch('http://localhost:3000/user/sendMail',{
+                method:"POST",
+                body:JSON.stringify({
+                    email:email.value
+                }),
+                headers:{
+                    'Content-Type':'application/json'
+                }
+            }).then(res=>res.json()).then(res=>{
+                if(res.message === 'Usuario no registrado'){
+                    alert('Usuario no registrado')
+                }
+                else{
+                    let mensaje = document.createElement('h2')
+                    mensaje.innerHTML = 'Instrucciones llegaron a tu correo'
+                    document.body.appendChild(mensaje)
+                }
+            }).catch(err=>console.log(err))
+        }
+        })
+    </script>
+</body>
+</html>

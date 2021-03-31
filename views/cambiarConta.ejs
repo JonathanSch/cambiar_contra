@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cambiar Contra</title>
+</head>
+<body>
+    <h1><%=code %></h1>
+    <input type="password" placeholder="Nueva Contra" id="nuevaContra"/> 	
+    <button id="submit">Mandar</button>
+
+    <script>
+        const boton = document.getElementById('submit')
+        let code = '<%-JSON.stringify(code) %>';
+
+        code =JSON.parse(code)
+        
+        boton.onclick = () =>{
+        fetch('http://localhost:3000/user/cambiarPass',{
+        body:JSON.stringify({
+            codigoCambio:code,
+            password:document.getElementById('nuevaContra').value
+        }),
+        method:'POST',
+        headers:{
+            'content-type':'application/json'
+        }
+    }).then(res=>res.json()).then(res=>{
+        if(res.message === 'Cambio listo'){
+            let message = document.createElement('h2');
+            message.innerHTML = 'Contra cambiada'
+            document.body.appendChild(message);
+            setTimeout(()=>{
+                window.location.href = 'http://localhost:3000/website/login.html'
+            },1000)
+        }
+        else if(res.message==="Este link ya no es valido"){
+            let message = document.createElement('h2');
+            message.innerHTML = 'Este link ya no es valido, puedes crear otro en la pagina de olvide mi contraseña del sitio'
+        }
+        else if(res.error){
+            alert('Hubo un error')
+        }
+    
+    }).catch(err=>console.log(err))
+        }
+    </script>
+</body>
+</html>
