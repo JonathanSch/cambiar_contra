@@ -50,7 +50,7 @@ router.post('/login',async (req,res)=>{
 let transport = nodemailer.createTransport({
     service:'gmail',
     auth:{
-        user:'acatanb@gmail.com',
+        user:process.env.EMAIL,
         pass:process.env.PASS
     }
 })
@@ -64,7 +64,7 @@ router.post('/sendMail',async (req,res)=>{
     await User.updateOne({email:req.body.email},{$set:{codigoCambio:newCodigo,procesoCambio:true}});
     
     let mailOptions = {
-        from:"acatanb@gmail.com",
+        from:process.env.EMAIL,
         to:req.body.email,
         subject:"Cambiar contraseña",
         html:`<a href="http://localhost:3000/user/cambio?code=${newCodigo}">Apreta aqui para cambiar la contra</a>`
